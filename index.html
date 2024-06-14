@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 기반 캐릭터 생성 도구</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI 기반 캐릭터 생성 도구</h1>
+        <div id="character-display">
+            <p>여기에 생성된 캐릭터가 표시됩니다.</p>
+        </div>
+        <button id="generate-btn">캐릭터 생성</button>
+        <div id="dialogue-box">
+            <p id="dialogue">대화 내용이 여기에 표시됩니다.</p>
+            <input type="text" id="user-input" placeholder="여기에 입력하세요...">
+            <button id="send-btn">전송</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
