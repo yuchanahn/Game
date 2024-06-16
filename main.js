@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function getAIResponse(prompt) {
         try {
-            const response = await axios.post('http://127.0.0.1:3000/generate', {
+            const response = await axios.post('http://35.216.97.222:3000/generate', {
                 prompt: prompt,
             });
 
