@@ -72,9 +72,7 @@ app.post('/game_start', async (req, res) => {
                 {성격: ...},
                 {외모: ...},
                 {배경: ...},
-                {AI 생성 프롬프트: ...}}
-                >
-                <
+                {AI 생성 프롬프트: ...}},
                 {{이름: ...},
                 {나이: ...},
                 {성별: ...},
@@ -93,7 +91,20 @@ app.post('/game_start', async (req, res) => {
     const response = await result.response;
     const text = await response.text();
     const aiResponseMarkdown = `${text}`;
-    const story = aiResponseMarkdown.replace(/<([^}]+)>/g, '');
+
+    const character = [];
+    const story = aiResponseMarkdown.replace(/<([^>]*)>/g, (match, p1) => {
+        const characters = p1.split('},').map((character) => {
+            const characterData = character.replace(/{|}/g, '').split(',').map((data) => {
+                const [key, value] = data.split(':');
+                return [key.trim(), value.trim()];
+            });
+
+            const characterInfo = Object.fromEntries(characterData);
+            character.push(characterInfo);
+        }
+        );
+    
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
@@ -123,8 +134,21 @@ app.post('/generate', async (req, res) => {
         const aiResponseMarkdown = `${text}`;
         
         // <>로 묶인 부분을 추출
-        const story = aiResponseMarkdown.replace(/<([^}]+)>/g, '');
-        const character = aiResponseMarkdown.match(/<([^}]+)>/g);
+
+        const character = [];
+        const story = aiResponseMarkdown.replace(/<([^>]*)>/g, (match, p1) => {
+            const characters = p1.split('},').map((character) => {
+                const characterData = character.replace(/{|}/g, '').split(',').map((data) => {
+                    const [key, value] = data.split(':');
+                    return [key.trim(), value.trim()];
+                });
+
+                const characterInfo = Object.fromEntries(characterData);
+                character.push(characterInfo);
+            });
+
+            return '';
+        });
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
 
