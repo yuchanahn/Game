@@ -121,7 +121,7 @@ app.post('/generate', async (req, res) => {
         const characterProfile = await response.text().match(/\*캐릭터 프로필\*([\s\S]*?)(?=\n\n)/g);
         
         const aiResponseMarkdown = `${story}`;
-        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown} # @@@ \n${characterProfile ? characterProfile.join('') : ''}`);
+        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}\n # @@@ \n${characterProfile ? characterProfile.join('') : ''}`);
         res.send(aiResponseHTML);
     } catch (error) {
         console.error('Error generating AI response:', error);
