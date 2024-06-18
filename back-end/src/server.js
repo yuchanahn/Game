@@ -65,8 +65,8 @@ app.post('/game_start', async (req, res) => {
 
             예시:
                 소설 내용...
-                <
-                {{이름: ...},
+                <<
+                [ {{이름: ...},
                 {나이: ...},
                 {성별: ...},
                 {성격: ...},
@@ -79,9 +79,8 @@ app.post('/game_start', async (req, res) => {
                 {성격: ...},
                 {외모: ...},
                 {배경: ...},
-                {AI 생성 프롬프트: ...}}
-                >
-            위와 같이 <>내부에 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
+                {AI 생성 프롬프트: ...}} ]
+            위와 같이 <<를 작성한 뒤 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
         `,
     });
     const session = await model.startChat();
@@ -92,19 +91,9 @@ app.post('/game_start', async (req, res) => {
     const text = await response.text();
     const aiResponseMarkdown = `${text}`;
 
-    const character = [];
-    const story = aiResponseMarkdown.replace(/<([^>]*)>/g, (match, p1) => {
-        const characters = p1.split('},').map((character) => {
-            const characterData = character.replace(/{|}/g, '').split(',').map((data) => {
-                const [key, value] = data.split(':');
-                return [key.trim(), value.trim()];
-            });
+    // << 이후의 내용을 추출
+    const story = aiResponseMarkdown.split('<<')[0].trim();
 
-            const characterInfo = Object.fromEntries(characterData);
-            character.push(characterInfo);
-        }
-        );
-    
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
@@ -133,26 +122,15 @@ app.post('/generate', async (req, res) => {
 
         const aiResponseMarkdown = `${text}`;
         
-        // <>로 묶인 부분을 추출
-
-        const character = [];
-        const story = aiResponseMarkdown.replace(/<([^>]*)>/g, (match, p1) => {
-            const characters = p1.split('},').map((character) => {
-                const characterData = character.replace(/{|}/g, '').split(',').map((data) => {
-                    const [key, value] = data.split(':');
-                    return [key.trim(), value.trim()];
-                });
-
-                const characterInfo = Object.fromEntries(characterData);
-                character.push(characterInfo);
-            });
-
-            return '';
-        });
+        // << 이후의 내용을 추출
+        const story = aiResponseMarkdown.split('<<')[0].trim();
+        const character = aiResponseMarkdown.split('<<')[1].trim();
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
 
-        res.send({ story: aiResponseHTML, character: character });
+        const characterJSON = JSON.parse(character);
+        
+        res.send({ story: aiResponseHTML, character: characterJSON });
     } catch (error) {
         console.error('Error generating AI response:', error);
         res.status(500).json({ error: 'Internal server error' });
