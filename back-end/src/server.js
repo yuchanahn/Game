@@ -94,6 +94,9 @@ app.post('/game_start', async (req, res) => {
     const text = await response.text();
     const aiResponseMarkdown = `${text}`;
     const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}`);
+
+    console.log('User ID:', userId);
+
     res.send({ userId: userId, text: aiResponseHTML });
 });
 
