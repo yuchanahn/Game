@@ -55,9 +55,7 @@ app.post('/game_start', async (req, res) => {
     const text = await response.text();
     const aiResponseMarkdown = `${text}`;
     const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}`);
-    res.send(aiResponseHTML);
-
-    res.json({ userId: userId, text: aiResponseHTML });
+    res.send({ userId: userId, text: aiResponseHTML });
 });
 
 // POST /generate 요청 처리
