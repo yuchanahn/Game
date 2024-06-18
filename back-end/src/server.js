@@ -128,7 +128,8 @@ app.post('/generate', async (req, res) => {
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
         console.log('character: ', character);
-        const characterJSON = JSON.parse(character);
+        //json형식으로 변환하기 위해 { }로 감싸주기
+        const characterJSON = JSON.parse(`{${character}}`);
         
         res.send({ story: aiResponseHTML, character: characterJSON });
     } catch (error) {
