@@ -132,8 +132,8 @@ app.post('/generate', async (req, res) => {
         const response = await result.response;
         const text = await response.text();
 
-        const story = await text.match(/(.*)(?=\n\n\*캐릭터 프로필\*)/g);
-        const characterProfile = await response.text().match(/\*캐릭터 프로필\*([\s\S]*?)(?=\n\n)/g);
+        const story = await text.match(/(.*)(?=\n\n\*등장인물\*)/g);
+        const characterProfile = await response.text().match(/\*등장인물\*([\s\S]*?)(?=\n\n)/g);
         
         const aiResponseMarkdown = `${story}`;
         const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}\n # @@@ \n${characterProfile ? characterProfile.join('') : ''}`);
