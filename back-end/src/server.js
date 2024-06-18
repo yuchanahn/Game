@@ -65,7 +65,7 @@ app.post('/game_start', async (req, res) => {
 
             예시:
                 소설 내용...
-                ^
+                <
                 {{이름: ...},
                 {나이: ...},
                 {성별: ...},
@@ -73,8 +73,8 @@ app.post('/game_start', async (req, res) => {
                 {외모: ...},
                 {배경: ...},
                 {AI 생성 프롬프트: ...}}
-                ^
-                ^
+                >
+                <
                 {{이름: ...},
                 {나이: ...},
                 {성별: ...},
@@ -82,14 +82,8 @@ app.post('/game_start', async (req, res) => {
                 {외모: ...},
                 {배경: ...},
                 {AI 생성 프롬프트: ...}}
-                ^
-                {
-                ....
-                }
-                {
-                ....
-                }
-            위와 같이 ^^내부에 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
+                >
+            위와 같이 <>내부에 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
         `,
     });
     const session = await model.startChat();
@@ -99,7 +93,7 @@ app.post('/game_start', async (req, res) => {
     const response = await result.response;
     const text = await response.text();
     const aiResponseMarkdown = `${text}`;
-    const story = aiResponseMarkdown.replace(/\^([^}]+)\^/g, '');
+    const story = aiResponseMarkdown.replace(/<([^}]+)>/g, '');
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
@@ -128,8 +122,9 @@ app.post('/generate', async (req, res) => {
 
         const aiResponseMarkdown = `${text}`;
         
-        const story = aiResponseMarkdown.replace(/\^([^}]+)\^/g, '');
-        const character = aiResponseMarkdown.match(/\^([^}]+)\^/g);
+        // <>로 묶인 부분을 추출
+        const story = aiResponseMarkdown.replace(/<([^}]+)>/g, '');
+        const character = aiResponseMarkdown.match(/<([^}]+)>/g);
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
 
