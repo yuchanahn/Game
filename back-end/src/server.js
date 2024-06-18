@@ -118,10 +118,11 @@ app.post('/generate', async (req, res) => {
 
         const aiResponseMarkdown = `${text}`;
         
+        //캐릭터가 아닌 스토리 부분만 추출
+        const story = aiResponseMarkdown.replace(/\{([^}]+)\}/g, '');
         const character = aiResponseMarkdown.match(/\{([^}]+)\}/g);
-
-        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}\n ^ \n${character}`);
-
+        
+        const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
 
         res.send(aiResponseHTML);
     } catch (error) {

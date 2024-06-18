@@ -116,3 +116,13 @@ button {
 #generate-btn, #start-btn {
     margin-top: 10px;
 }
+
+/* Add the following styles to styles.css */
+
+.character-box {
+    background-color: #444;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    color: #fff;
+}

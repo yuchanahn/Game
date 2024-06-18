@@ -46,6 +46,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function displayCharacters(characters) {
+        characterList.innerHTML = ''; // 기존 캐릭터 리스트 초기화
+        characters.forEach(character => {
+            const characterBox = document.createElement('div');
+            characterBox.classList.add('character-box');
+            characterBox.innerHTML = `
+                <h3>${character.이름}</h3>
+                <p>나이: ${character.나이}</p>
+                <p>성별: ${character.성별}</p>
+                <p>성격: ${character.성격}</p>
+                <p>외모: ${character.외모}</p>
+                <p>배경: ${character.배경}</p>
+                <p>AI 생성 프롬프트: ${character['AI 생성 프롬프트']}</p>
+            `;
+            characterList.appendChild(characterBox);
+        });
+    }
+
     async function getAIResponse(prompt) {
         try {
             toggleLoadingSpinner(true); // 로딩 스피너 표시
@@ -56,7 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 userId: user_id,
             });
             toggleLoadingSpinner(false); // 로딩 스피너 숨김
-            return response.data;
+
+            let story = response.data.story;
+            let characters = response.data.character;
+            
+            displayCharacters(characters); // 캐릭터 정보 표시
+            return story;
         } catch (error) {
             init();
             userId = "";
