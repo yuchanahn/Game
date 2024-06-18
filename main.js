@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
     const generateBtn = document.getElementById('generate-btn');
+    const startBtn = document.getElementById('start-btn');
     const dialogueBox = document.getElementById('dialogue-box');
     const dialogue = document.getElementById('dialogue');
     const characterDisplay = document.getElementById('character-display');
@@ -41,5 +42,16 @@ document.addEventListener('DOMContentLoaded', function () {
         appendMessage(false, aiResponse);
         
         userInput.value = '';
+    });
+
+    startBtn.addEventListener('click', function () {
+        userInput.value = '시작';
+        sendBtn.click();
+    });
+
+    userInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            sendBtn.click();
+        }
     });
 });
