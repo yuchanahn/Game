@@ -58,7 +58,7 @@ app.post('/game_start', async (req, res) => {
             사용자의 입력을 반영해서 이야기를 쓰고 맨 마지막 줄에 현재까지 만들어진 소설속 캐릭터들과 자신의 프로필을 작성합니다.
             프로필은 인격체만 작성합니다. 그리고 내용상 많이 등장하는 캐릭터만 작성합니다. 더 이상 비중이 없어진 캐릭터는 더이상 프로필을 작성하지 않습니다.
             데이터가 부족할 경우에는 캐릭터 프로필을 작성하지 않습니다.
-            
+
             프로필을 추가할 때는 
 
             *캐릭터 프로필* 이라고 작성합니다.
@@ -115,9 +115,11 @@ app.post('/generate', async (req, res) => {
         const result = await session.sendMessage(prompt);
         const response = await result.response;
         const text = await response.text();
+
+        const characterProfile = await response.text().match(/\*캐릭터 프로필\*([\s\S]*?)(?=\n\n)/g);
     
         const aiResponseMarkdown = `${text}`;
-        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}`);
+        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown} # @@@ \n${characterProfile ? characterProfile.join('') : ''}`);
         res.send(aiResponseHTML);
     } catch (error) {
         console.error('Error generating AI response:', error);
