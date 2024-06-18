@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dialogueBox = document.getElementById('dialogue-box');
     const dialogue = document.getElementById('dialogue');
     const characterDisplay = document.getElementById('character-display');
+    const characterList = document.getElementById('character-list'); // 캐릭터 리스트 요소
     const loadingSpinner = document.getElementById('loading-spinner'); // 로딩 스피너 추가
 
     var user_id = "";
