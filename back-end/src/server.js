@@ -98,6 +98,7 @@ app.post('/game_start', async (req, res) => {
     const aiResponseMarkdown = `${text}`;
 
     const story = aiResponseMarkdown.split('<<')[0].trim();
+    const character = aiResponseMarkdown.split('<<')[1].trim();
     const rawJson = character.replace(/>>/g, '').trim();
     console.log('character: ', rawJson);
     const characterJSON = JSON.parse(rawJson);
