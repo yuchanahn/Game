@@ -127,10 +127,11 @@ app.post('/generate', async (req, res) => {
         const character = aiResponseMarkdown.split('<<')[1].trim();
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
-        console.log('character: ', character);
         //json형식으로 변환하기 위해 { }로 감싸주기
         //AI가 생성한 >> 문자열 제거
-        const characterJSON = JSON.parse(`{${character.replace(/>>/g, '')}}`);
+        const rawJson = `{${character.replace(/>>/g, '')}}`; 
+        console.log('character: ', rawJson);
+        const characterJSON = JSON.parse(rawJson);
 
         res.send({ story: aiResponseHTML, character: characterJSON });
     } catch (error) {
