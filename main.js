@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 prams: "prams",
             });
             user_id = response.data.userId;
+            
+            console.log('User ID:', user_id);
+            
             toggleLoadingSpinner(false); // 로딩 스피너 숨김
             return response.data.text;
         } catch (error) {
@@ -82,8 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return story;
         } catch (error) {
             init();
-            userId = "";
-            console.log('새로운 세션을 시작합니다.');
             console.error('Error fetching AI response:', error);
             return 'Error fetching AI response';
         }
@@ -130,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function init() {
+        user_id = "";
         dialogue.innerHTML = ''; // dialogueBox 초기화
         startBtn.style.display = 'block'; // 시작 버튼 보이기
         dialogueBox.style.display = 'none'; // dialogueBox 숨기기
