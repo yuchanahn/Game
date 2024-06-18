@@ -127,7 +127,7 @@ app.post('/generate', async (req, res) => {
         const character = aiResponseMarkdown.split('<<')[1].trim();
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
-
+        console.log('character: ', character);
         const characterJSON = JSON.parse(character);
         
         res.send({ story: aiResponseHTML, character: characterJSON });
