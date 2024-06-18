@@ -2,12 +2,19 @@ body {
     background-color: #1a1a1a;
     color: #fff;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 전체 높이에 맞추기 */
 }
 
 h1 {
@@ -18,37 +25,70 @@ h1 {
     margin-bottom: 20px;
 }
 
-button {
-    margin-right: 10px;
-    padding: 10px 20px;
+.chat-container {
+    width: 100%;
+    max-width: 600px; /* 채팅 박스 최대 너비 */
     background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 #dialogue-box {
-    border: 1px solid #666;
     padding: 10px;
-    height: 300px;
-    overflow-y: scroll;
-    background-color: #333;
-    margin-bottom: 20px;
+    height: 300px; /* 최대 높이 지정 */
+    overflow-y: auto; /* 필요할 때 스크롤 생성 */
 }
 
 #dialogue {
     color: #fff;
 }
 
-#user-input {
-    width: calc(100% - 80px);
-    padding: 10px;
-    margin-right: 10px;
+#send-btn {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    position: relative;
 }
 
-#send-btn {
-    width: 60px;
+#loading-spinner {
+    position: absolute;
+    top: 50%;
+    right: 30px; /* 스피너가 버튼에서 더 멀리 떨어지지 않도록 수정 */
+    margin-top: -10px; /* 스피너의 높이의 절반을 마이너스 마진으로 적용하여 중앙 정렬 */
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    display: none; /* 초기에는 숨김 상태 */
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
     padding: 10px;
+    background-color: #444;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: none;
+    background-color: transparent;
+    color: #fff;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .message {
@@ -63,12 +103,16 @@ button {
     color: #f6a;
 }
 
-#start-btn {
-    display: block;
-    margin: 20px auto;
+button {
+    margin-right: 10px;
     padding: 10px 20px;
     background-color: #333;
     color: #fff;
     border: none;
     cursor: pointer;
+    border-radius: 20px;
+}
+
+#generate-btn, #start-btn {
+    margin-top: 10px;
 }

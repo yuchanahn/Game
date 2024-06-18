@@ -12,13 +12,18 @@
         <div id="character-display">
             <p>여기에 생성된 캐릭터가 표시됩니다.</p>
         </div>
+        <div class="chat-container">
+            <div id="dialogue-box">
+                <div id="dialogue"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="여기에 입력하세요...">
+                <button id="send-btn">전송</button>
+                <div id="loading-spinner"></div> <!-- 로딩 스피너 -->
+            </div>
+        </div>
         <button id="generate-btn">캐릭터 생성</button>
         <button id="start-btn">게임 시작</button>
-        <div id="dialogue-box">
-            <div id="dialogue"></div>
-        </div>
-        <input type="text" id="user-input" placeholder="여기에 입력하세요...">
-        <button id="send-btn">전송</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
