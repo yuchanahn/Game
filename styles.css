@@ -1,14 +1,13 @@
 body {
+    background-color: #1a1a1a;
+    color: #fff;
     font-family: Arial, sans-serif;
 }
 
 .container {
-    width: 80%;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
 }
 
 h1 {
@@ -16,47 +15,60 @@ h1 {
 }
 
 #character-display {
-    text-align: center;
     margin-bottom: 20px;
 }
 
+button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
 #dialogue-box {
-    height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
+    border: 1px solid #666;
     padding: 10px;
-    margin-bottom: 10px;
+    height: 300px;
+    overflow-y: scroll;
+    background-color: #333;
+    margin-bottom: 20px;
+}
+
+#dialogue {
+    color: #fff;
+}
+
+#user-input {
+    width: calc(100% - 80px);
+    padding: 10px;
+    margin-right: 10px;
+}
+
+#send-btn {
+    width: 60px;
+    padding: 10px;
 }
 
 .message {
     margin-bottom: 10px;
 }
 
-.user-message {
-    font-weight: bold;
+.message .user {
+    color: #6bf;
 }
 
-.ai-message {
-    font-style: italic;
+.message .ai {
+    color: #f6a;
 }
 
-input[type="text"] {
-    width: calc(100% - 110px);
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button {
+#start-btn {
+    display: block;
+    margin: 20px auto;
     padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
     cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
 }
