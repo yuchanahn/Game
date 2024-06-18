@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 기반 캐릭터 생성 도구</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #dialogue-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+
+        .user-message {
+            font-weight: bold;
+        }
+
+        .ai-message {
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -14,10 +34,10 @@
         </div>
         <button id="generate-btn">캐릭터 생성</button>
         <div id="dialogue-box">
-            <p id="dialogue">대화 내용이 여기에 표시됩니다.</p>
-            <input type="text" id="user-input" placeholder="여기에 입력하세요...">
-            <button id="send-btn">전송</button>
+            <div id="dialogue"></div>
         </div>
+        <input type="text" id="user-input" placeholder="여기에 입력하세요...">
+        <button id="send-btn">전송</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

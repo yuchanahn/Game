@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
     const generateBtn = document.getElementById('generate-btn');
+    const dialogueBox = document.getElementById('dialogue-box');
     const dialogue = document.getElementById('dialogue');
     const characterDisplay = document.getElementById('character-display');
 
@@ -11,13 +12,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 prompt: prompt,
             });
 
-            console.log(response.data);
-
             return response.data;
         } catch (error) {
             console.error('Error fetching AI response:', error);
             return 'Error fetching AI response';
         }
+    }
+
+    function appendMessage(user, message) {
+        const messageBox = document.createElement('div');
+        messageBox.classList.add('message', user ? 'user-message' : 'ai-message');
+        messageBox.innerHTML = user ? `사용자: ${message}` : `${message}`;
+        dialogue.appendChild(messageBox);
+        dialogueBox.scrollTop = dialogueBox.scrollHeight;
     }
 
     generateBtn.addEventListener('click', function () {
@@ -28,8 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const userText = userInput.value;
         if (userText.trim() === '') return;
 
+        appendMessage(true, userText);
+
         const aiResponse = await getAIResponse(userText);
-        dialogue.innerHTML += `사용자: ${userText}<br>${aiResponse}<br>`;
+        appendMessage(false, aiResponse);
         
         userInput.value = '';
     });
