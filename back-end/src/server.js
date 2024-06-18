@@ -85,7 +85,7 @@ app.post('/generate', async (req, res) => {
         const text = await response.text();
     
         const aiResponseMarkdown = `${text}`;
-        const aiResponseHTML = markdownToHTML(`#***\n${aiResponseMarkdown}`);
+        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}`);
         res.send(aiResponseHTML);
     } catch (error) {
         console.error('Error generating AI response:', error);

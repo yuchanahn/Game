@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     startBtn.addEventListener('click', function () {
         userInput.value = '시작';
         sendBtn.click();
+        startBtn.style.display = 'none';
     });
 
     userInput.addEventListener('keydown', function (event) {
