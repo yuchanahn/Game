@@ -30,7 +30,7 @@ const userSessions = new Map();
 
 app.post('/game_start', async (req, res) => {
     //새로운 세션 생성(id는 uuid값 생성) 후 세션 정보를 리턴
-    const { userId } = randomUUID();
+    const userId = randomUUID();
     const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
         systemInstruction: 
