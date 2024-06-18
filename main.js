@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dialogue = document.getElementById('dialogue');
     const characterDisplay = document.getElementById('character-display');
 
-    user_id = "";
+    var user_id = "";
 
     async function startGame() {
         try {
