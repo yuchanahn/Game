@@ -119,10 +119,26 @@ button {
 
 /* Add the following styles to styles.css */
 
+#character-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
 .character-box {
     background-color: #444;
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px;
     border-radius: 5px;
     color: #fff;
+    width: 150px; /* 캐릭터 박스의 너비를 줄임 */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.character-box h3 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
 }
