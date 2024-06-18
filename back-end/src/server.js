@@ -48,6 +48,10 @@ app.post('/game_start', async (req, res) => {
         Reflect user input in stories and conclude with profiles of recurring characters.
         Profiles include personality traits only; omit less relevant characters.
         답변 할 때는 한글로 답변해야 합니다.
+        마지막에 프로필을 작성할때 
+        등장인물
+        ...
+        이런식으로 작성합니다.
         `
         
         
