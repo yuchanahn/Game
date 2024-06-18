@@ -121,10 +121,10 @@ app.post('/generate', async (req, res) => {
         //캐릭터가 아닌 스토리 부분만 추출
         const story = aiResponseMarkdown.replace(/\{([^}]+)\}/g, '');
         const character = aiResponseMarkdown.match(/\{([^}]+)\}/g);
-        
+
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
 
-        res.send(aiResponseHTML);
+        res.send({ story: aiResponseHTML, character: character });
     } catch (error) {
         console.error('Error generating AI response:', error);
         res.status(500).json({ error: 'Internal server error' });
