@@ -97,9 +97,11 @@ app.post('/game_start', async (req, res) => {
     const text = await response.text();
     const aiResponseMarkdown = `${text}`;
 
-    // << 이후의 내용을 추출
     const story = aiResponseMarkdown.split('<<')[0].trim();
-
+    const rawJson = `${character.replace(/>>/g, '')}`.trim();
+    console.log('character: ', rawJson);
+    const characterJSON = JSON.parse(rawJson);
+    
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
@@ -133,9 +135,7 @@ app.post('/generate', async (req, res) => {
         const character = aiResponseMarkdown.split('<<')[1].trim();
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
-        //json형식으로 변환하기 위해 { }로 감싸주기
-        //AI가 생성한 >> 문자열 제거
-        const rawJson = `{${character.replace(/>>/g, '')}}`; 
+        const rawJson = `${character.replace(/>>/g, '')}`.trim(); 
         console.log('character: ', rawJson);
         const characterJSON = JSON.parse(rawJson);
 
