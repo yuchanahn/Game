@@ -65,7 +65,7 @@ app.post('/game_start', async (req, res) => {
 
             예시:
                 소설 내용...
-                |character|profile|
+                {
                 이름: ...
                 나이: ...
                 성별: ...
@@ -73,11 +73,16 @@ app.post('/game_start', async (req, res) => {
                 외모: ...
                 배경: ...
                 AI 생성 프롬프트: ...
-                |character|profile|
+                }
+                {
                 ....
-                |character|profile|
+                }
+                {
                 ....
+                }
+                {
                 ....
+                }
             위와 같이 작성합니다. ...부분에 데이터를 작성합니다.
         `,
     });
@@ -112,7 +117,12 @@ app.post('/generate', async (req, res) => {
         const text = await response.text();
 
         const aiResponseMarkdown = `${text}`;
-        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}\n`);
+        
+        const character = aiResponseMarkdown.match(/\{([^}]+)\}/g);
+
+        const aiResponseHTML = markdownToHTML(`# *** \n${aiResponseMarkdown}\n ^ \n${character}`);
+
+
         res.send(aiResponseHTML);
     } catch (error) {
         console.error('Error generating AI response:', error);
