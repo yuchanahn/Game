@@ -7,10 +7,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const dialogue = document.getElementById('dialogue');
     const characterDisplay = document.getElementById('character-display');
 
+    user_id = "";
+
+    async function startGame() {
+        try {
+            const response = await axios.post('http://35.216.97.222:3000/game_start', {
+                prams: "prams",
+            });
+            user_id = response.data.userId;
+            return response.data.text;
+        } catch (error) {
+            console.error('Error fetching AI response:', error);
+            return 'Error fetching AI response';
+        }
+    }
+
     async function getAIResponse(prompt) {
         try {
             const response = await axios.post('http://35.216.97.222:3000/generate', {
                 prompt: prompt,
+                userId: user_id,
             });
 
             return response.data;
@@ -44,9 +60,9 @@ document.addEventListener('DOMContentLoaded', function () {
         userInput.value = '';
     });
 
-    startBtn.addEventListener('click', function () {
-        userInput.value = '시작';
-        sendBtn.click();
+    startBtn.addEventListener('click', async function () {
+        const aiResponse = await startGame();
+        appendMessage(false, aiResponse);
         startBtn.style.display = 'none';
     });
 
