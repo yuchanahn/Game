@@ -79,6 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             toggleLoadingSpinner(false); // 로딩 스피너 숨김
 
+            if(response.data.err != null) {
+                init();
+                return `Error : ${response.data.err}`;
+            }
+
             let story = response.data.story;
             let characters = response.data.character;
             

@@ -141,8 +141,11 @@ app.post('/generate', async (req, res) => {
 
         res.send({ story: aiResponseHTML, character: characterJSON });
     } catch (error) {
-        console.error('Error generating AI response:', error);
-        res.status(500).json({ error: 'Internal server error' });
+
+        res.send({ err: error });
+
+        //console.error('Error generating AI response:', error);
+        //res.status(500).json({ error: 'Internal server error' });
     }
 });
 
