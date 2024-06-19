@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    const Option = "Lan";
+    const Option = "Wan";
     const IP_Lan = "http://127.0.0.1:3000";
     const IP_Wan = "http://35.216.97.222:3000";
     
