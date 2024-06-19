@@ -53,6 +53,10 @@ h1 {
     position: relative;
 }
 
+#send-btn:hover {
+    background-color: #555; /* 호버 시 배경 색 변경 */
+}
+
 #loading-spinner {
     position: absolute;
     top: 50%;
@@ -114,6 +118,10 @@ button {
     border-radius: 20px;
 }
 
+button:hover {
+    background-color: #555; /* 호버 시 배경 색 변경 */
+}
+
 #generate-btn, #start-btn {
     margin-top: 10px;
 }
@@ -141,6 +149,11 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.character-box:hover {
+    background-color: #555; /* 호버 시 배경 색 변경 */
+    cursor: pointer; /* 호버 시 커서 변경 */
 }
 
 .character-box h3 {

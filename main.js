@@ -144,6 +144,9 @@ document.addEventListener('DOMContentLoaded', function () {
         sendBtn.disabled = true; // 전송 버튼 비활성화
         generateBtn.disabled = true; // 캐릭터 생성 버튼 비활성화
         userInput.disabled = true; // 사용자 입력 비활성화
+        startBtn.disabled = false; // 게임 시작 버튼 활성화
+
+        characterList.innerHTML = ''; // 캐릭터 리스트 초기화
     }
     
     init();
