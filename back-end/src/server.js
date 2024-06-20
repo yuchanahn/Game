@@ -7,6 +7,23 @@ import { marked } from 'marked'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { randomUUID } from 'crypto';
 
+import Replicate from 'replicate';
+const replicate = new Replicate(
+    {
+        auth: "r8_B3atCuxvhKSbk1uQYqlpXIN2hbKkhiW1eZHFg",
+    }
+);
+
+async function gen_image(prompt) {
+    const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { 
+        input: {
+            prompt: prompt,
+            scheduler: "K_EULER"
+        },
+    });
+    return output;
+}
+
 const genAI = new GoogleGenerativeAI('AIzaSyBCT3a4qCAOI5Cp_F3m_qsAdob7jNl11ok');
 
 const app = express();
@@ -58,7 +75,7 @@ app.post('/game_start', async (req, res) => {
             사용자의 입력을 반영해서 이야기를 쓰고 맨 마지막 줄에 현재까지 만들어진 소설속 캐릭터들과 자신의 프로필을 작성합니다.
             프로필은 인격체만 작성합니다. 사물은 제외합니다. (예: 무기, 마을이름, 지역이름, 책, 등 제외!)
             캐릭터 프로필을 최대 4개만 작성합니다. 4개 이상의 프로필 작성이 필요한경우 내용에서 많이 언급된 캐릭터만 작성합니다.
-            프로필 양식중 데이터가 부족한 경우 ?로 표시합니다.
+            프로필 양식중 데이터가 부족한 경우 "?"로 표시합니다.
 
             프로필을 작성할 때는
 
@@ -86,6 +103,19 @@ app.post('/game_start', async (req, res) => {
                     },
                 ]
             위와 같이 <<를 작성한 뒤 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
+
+
+            장면이 이미지 생성이 적합한 경우 이미지를 생성하기 위한 프롬프트를 작성합니다.
+
+            캐릭터 프로필 작성 후 %%를 작성한 뒤 이미지 생성을 위한 프롬프트를 작성합니다.
+            예시:
+                소설 내용...
+                <<
+                [ 
+                    캐릭터 프로필...
+                ]
+                %%
+                이미지 생성 프롬프트
         `,
     });
     const session = await model.startChat();
@@ -131,16 +161,21 @@ app.post('/generate', async (req, res) => {
         
         // << 이후의 내용을 추출
         const story = aiResponseMarkdown.split('<<')[0].trim();
-        const character = aiResponseMarkdown.split('<<')[1].trim();
+        const char_prompt = aiResponseMarkdown.split('<<')[1].trim();
+        const character = char_prompt.split('%%')[0].trim();
+        const image_prompt = aiResponseMarkdown.split('%%')[1].trim();
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
         const rawJson = character.replace(/>>/g, '').trim(); 
-        console.log('character: ', rawJson);
+        console.log('ai gen : ', char_prompt);
         const characterJSON = JSON.parse(rawJson);
-
-        res.send({ story: aiResponseHTML, character: characterJSON });
+        let image = null;
+        if (image_prompt != null) {
+            image = await gen_image(image_prompt + ', hentai, hd, 2d, anime');
+        }
+        res.send({ story: aiResponseHTML, character: characterJSON, image: image });
     } catch (error) {
-
+        console.error('Error fetching AI response:', error);
         res.send({ err: error });
 
         //console.error('Error generating AI response:', error);

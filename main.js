@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    const Option = "Wan";
+    const Option = "Lan";
     const IP_Lan = "http://127.0.0.1:3000";
     const IP_Wan = "http://35.216.97.222:3000";
     
@@ -90,6 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let story = response.data.story;
             let characters = response.data.character;
+            let image = response.data.image;
+            
+            if (image != null) {
+                const imageBox = document.createElement('div');
+                imageBox.classList.add('image-box');
+                imageBox.innerHTML = `<img src="${image}" alt="AI Image">`; // AI 이미지 표시
+                dialogue.appendChild(imageBox);
+            }
             
             displayCharacters(characters); // 캐릭터 정보 표시
             return story;

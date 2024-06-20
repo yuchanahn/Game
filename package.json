@@ -12,8 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.12.0",
+    "@zeldafan0225/ai_horde": "^5.1.0",
+    "axios": "^1.7.2",
     "express": "^4.19.2",
     "marked": "^13.0.0",
-    "openai": "^4.50.0"
+    "openai": "^4.50.0",
+    "replicate": "^0.30.2"
   }
 }
