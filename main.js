@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const IP_Lan = "http://127.0.0.1:3000";
     const IP_Wan = "http://35.216.97.222:3000";
     
-    const IP = Option == "Lan" ? IP_Lan : IP_Wan;
+    const IP = Option == "Wan" ? IP_Lan : IP_Wan;
 
     async function startGame() {
         try {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 imageBox.innerHTML = `<img src="${image}" alt="AI Image">`; // AI 이미지 표시
                 dialogue.appendChild(imageBox);
             }
-            
+
             displayCharacters(characters); // 캐릭터 정보 표시
             return story;
         } catch (error) {
