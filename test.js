@@ -1,85 +1,114 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import fetch from 'node-fetch';
+import fs from 'fs';
+import WebSocket from 'ws';
 
-const genAI = new GoogleGenerativeAI('AIzaSyD9-DKBNlC9VSB-0yg-OLemRvRuAfKZTyE');
+const mapTxt2ImgOptions = (options) => {
+    let body = {
+        prompt: options.prompt,
+        negative_prompt: options.negativePrompt,
+        seed: options.seed,
+        subseed: options.variationSeed,
+        subseed_strength: options.variationSeedStrength,
+        sampler_name: options.samplingMethod,
+        batch_size: options.batchSize,
+        n_iter: options.batchCount,
+        steps: options.steps,
+        width: options.width,
+        height: options.height,
+        cfg_scale: options.cfgScale,
+        seed_resize_from_w: options.resizeSeedFromWidth,
+        seed_resize_from_h: options.resizeSeedFromHeight,
+        restore_faces: options.restoreFaces,
+    };
+    if (options.hires) {
+        body = {
+            ...body,
+            enable_hr: true,
+            denoising_strength: options.hires.denoisingStrength,
+            hr_upscaler: options.hires.upscaler,
+            hr_scale: options.hires.upscaleBy,
+            hr_resize_x: options.hires.resizeWidthTo,
+            hr_resize_y: options.hires.resizeHeigthTo,
+            hr_second_pass_steps: options.hires.steps,
+        };
+    }
+    if (options.script) {
+        body = {
+            ...body,
+            script_name: options.script.name,
+            script_args: options.script.args || [],
+        };
+    }
+    const { extensions } = options;
+    if (extensions?.controlNet) {
+        body.controlnet_units = extensions.controlNet.map(mapControlNetOptions);
+    }
+    return body;
+};
 
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    systemInstruction:
-        `
-        당신은 소설 작가입니다.
-        판타지, 로맨스 장르의 이야기를 써야합니다.
+const url = 'http://127.0.0.1:7860/sdapi/v1/txt2img';
+const data = {
+    prompt: 'best quality, ultra high res, (photorealistic:1.4), (detailed beautiful girl:1.4), (medium breasts:0.8), Detailed facial details, beautiful detailed eyes, teenage, slender, smile, (makeup:0.4), red lips, (full body, sitting, castle, on couch), <lora:cuteGirlMix4_v10:0.7>, <lora:breastinclassBetter:0.3>,(Night:1.2), highly detailed clothes, (ulzzang-6500-v1.1:0.3), Style-Japan',
+};
 
-        사용자는 소설의 주인공이며, 소설의 다음 내용을 입력합니다.
-        사용자의 입력이 소설과 관련되지 않거나 주제에서 벗어날 경우, 답변으로 다시 입력해 달라고 요청합니다.
+function fetchImage() {
 
-        당신이 답변을 할 때는 100 ~ 150자 사이로 작성해야 합니다. (프로필 제외, 공백 제외)
-        이야기의 내용은 사용자의 입력을 기반으로 작성되어야 합니다.
+fetch(url, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(mapTxt2ImgOptions(data)),
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
 
-        AI라는 사실을 항상 숨겨야 합니다. AI에 관련된 질문이 있을 경우 대답을 자연스럽게 회피해야 합니다.
+        const base64ImageDataUrl = `data:image/png;base64,${data.images[0]}`;
+        const html = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Base64 Image</title>
+            </head>
+            <body>
+                <h1>Base64 Image Example</h1>
+                <img src="${base64ImageDataUrl}" alt="Base64 Image">
+            </body>
+            </html>
+        `;
+        fs.writeFile('example.html', html, 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing file:', err);
+                return;
+            }
 
-        처음 "내용 시작"이라는 메시지 이외의 사용자의 입력에 대해 다음 소설을 작성할 경우
+            console.log('File has been updated.');
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    
 
-        당신은 "X" 라고 했습니다. 또는
-        당신은 X 행동을 했습니다.
-        당신은 X를 발견했습니다. 등의 문장으로 시작해야 합니다.
+const ws = new WebSocket('ws://35.216.97.222:8080');
 
-        끝에 당신은 무엇을 할 것인가요? 라는 질문은 하지 않습니다.
-        끝말로 사용자에게 질문을 하지 않습니다.
-
-        사용자의 입력을 반영해서 이야기를 쓰고 맨 마지막 줄에 현재까지 만들어진 소설속 캐릭터들과 자신의 프로필을 작성합니다.
-        프로필은 인격체만 작성합니다. 사물은 제외합니다. (예: 무기, 마을이름, 지역이름, 책, 등 제외!)
-        캐릭터 프로필을 최대 4개만 작성합니다. 4개 이상의 프로필 작성이 필요한경우 내용에서 많이 언급된 캐릭터만 작성합니다.
-        프로필 양식중 데이터가 부족한 경우 "?"로 표시합니다.
-
-        프로필을 작성할 때는
-
-        예시:
-            소설 내용...
-            <<
-            [ 
-                {
-                    "이름": "...",
-                    "나이": "...",
-                    "성별": "...",
-                    "성격": "...",
-                    "외모": "...",
-                    "배경": "...",
-                    "AI 생성 프롬프트": "..."
-                },
-                {
-                    "이름": "...",
-                    "나이": "...",
-                    "성별": "...",
-                    "성격": "...",
-                    "외모": "...",
-                    "배경": "...",
-                    "AI 생성 프롬프트": "..."
-                },
-            ]
-        위와 같이 <<를 작성한 뒤 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
-
-
-        장면이 이미지 생성이 적합한 경우 이미지를 생성하기 위한 프롬프트를 작성합니다.
-
-        캐릭터 프로필 작성 후 %%를 작성한 뒤 이미지 생성을 위한 프롬프트를 작성합니다.
-        예시:
-            소설 내용...
-            <<
-            [ 
-                캐릭터 프로필...
-            ]
-            %%
-            이미지 생성 프롬프트
-    `,
+ws.on('open', function open() {
+  console.log('Connected to server');
+  ws.send('Hello server!');
 });
-const session = await model.startChat();
-const result = await session.sendMessage("내용 시작");
-const response = await result.response;
-const text = await response.text();
-const aiResponseMarkdown = `${text}`;
 
-const story = aiResponseMarkdown.split('<<')[0].trim();
-const character = aiResponseMarkdown.split('<<')[1].trim();
-const rawJson = character.replace(/>>/g, '').trim();
+ws.on('message', function incoming(message) {
+  console.log('Received from server: %s', message);
+});
 
-console.log('story: ', story);
+ws.on('close', function close() {
+  console.log('Disconnected from server');
+});

@@ -65,13 +65,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>성별: ${character.성별}</p>
                 <p>성격: ${character.성격}</p>
                 <p>외모: ${character.외모}</p>
-                <p>배경: ${character.배경}</p>
-                <p>AI 생성 프롬프트: ${character['AI 생성 프롬프트']}</p>
             `;
             characterList.appendChild(characterBox);
         });
     }
 
+    function showCount(count) {
+        const countBox = document.createElement('div');
+        countBox.classList.add('count-box');
+        countBox.innerHTML = `진행도: ${count}/20`;
+        dialogue.appendChild(countBox);
+    }
 
     async function getAIResponse(prompt) {
         try {
@@ -98,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 imageBox.innerHTML = `<img src="${image}" alt="Base64">`; // AI 이미지 표시
                 dialogue.appendChild(imageBox);
             }
-
+            showCount(response.data.count); // 진행도 표시
             displayCharacters(characters); // 캐릭터 정보 표시
             return story;
         } catch (error) {

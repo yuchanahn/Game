@@ -103,20 +103,12 @@ app.post('/game_start', async (req, res) => {
 
             처음 "내용 시작"이라는 메시지 이외의 사용자의 입력에 대해 다음 소설을 작성할 경우
 
-            당신은 "X" 라고 했습니다. 또는
-            당신은 X 행동을 했습니다.
-            당신은 X를 발견했습니다. 등의 문장으로 시작해야 합니다.
-
             끝에 당신은 무엇을 할 것인가요? 라는 질문은 하지 않습니다.
             끝말로 사용자에게 질문을 하지 않습니다.
 
             사용자의 입력을 반영해서 이야기를 쓰고 맨 마지막 줄에 현재까지 만들어진 소설속 캐릭터들과 자신의 프로필을 작성합니다.
-            프로필은 인격체만 작성합니다. 사물은 제외합니다. (예: 무기, 마을이름, 지역이름, 책, 등 제외!)
-            캐릭터 프로필을 최대 4개만 작성합니다. 4개 이상의 프로필 작성이 필요한경우 내용에서 많이 언급된 캐릭터만 작성합니다.
+            캐릭터 프로필을 최대 4개만 작성합니다. 4개 이상의 프로필 작성이 필요한 경우 내용에서 많이 언급된 캐릭터만 작성합니다.
             프로필 양식중 데이터가 부족한 경우 "?"로 표시합니다.
-
-            프로필을 작성할 때는
-
             예시:
                 소설 내용...
                 <<
@@ -127,8 +119,6 @@ app.post('/game_start', async (req, res) => {
                         "성별": "...",
                         "성격": "...",
                         "외모": "...",
-                        "배경": "...",
-                        "AI 생성 프롬프트": "..."
                     },
                     {
                         "이름": "...",
@@ -136,12 +126,10 @@ app.post('/game_start', async (req, res) => {
                         "성별": "...",
                         "성격": "...",
                         "외모": "...",
-                        "배경": "...",
-                        "AI 생성 프롬프트": "..."
                     },
                 ]
             위와 같이 <<를 작성한 뒤 json 형식으로 작성합니다. ...부분에 데이터를 작성합니다.
-
+            프로필은 인격체만 작성합니다. 사물은 제외합니다. (예: 무기, 마을이름, 지역이름, 책, 등 제외!)
 
             장면이 이미지 생성이 적합한 경우 이미지를 생성하기 위한 프롬프트를 작성합니다.
 
@@ -197,7 +185,19 @@ app.post('/generate', async (req, res) => {
             return res.status(400).json({ error: 'Session not found' });
         }
 
-        const result = await session.sendMessage(prompt);
+        if (count > 20) {
+            //Error: 이야기가 끝났습니다.
+            return res.status(400).json({ error: 'Story has ended' });
+        }
+
+        const story_end = count === 20;
+        let msg = prompt;
+
+        if (story_end) {
+            msg = prompt + ' 이것으로 이야기 끝';
+        }
+
+        const result = await session.sendMessage(msg);
         const response = await result.response;
         const text = await response.text();
 
@@ -222,8 +222,10 @@ app.post('/generate', async (req, res) => {
             draw.send(JSON.stringify({ id: id, prompt: image_prompt }));
 
             image = await promise;
+
+            console.log('Image fetched successfully, image' + image);
         }
-        res.send({ story: aiResponseHTML, character: characterJSON, image: image });
+        res.send({ story: aiResponseHTML, character: characterJSON, image: image, count: count });
     } catch (error) {
         console.error('Error fetching AI response:', error);
         res.send({ err: error });
@@ -236,5 +238,3 @@ app.post('/generate', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-

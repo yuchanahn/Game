@@ -39,11 +39,23 @@ h1 {
     width: 93%;
     padding: 30px;
     overflow-y: auto;
+    position: relative; /* 추가 */
 }
 
 #dialogue {
     color: #fff;
     width: 100%;
+}
+
+#count-box {
+    position: absolute; /* 추가 */
+    top: 10px; /* 추가 */
+    right: 10px; /* 추가 */
+    background-color: #444; /* 추가 */
+    color: #fff; /* 추가 */
+    padding: 5px 10px; /* 추가 */
+    border-radius: 5px; /* 추가 */
+    font-size: 1em; /* 추가 */
 }
 
 #start-btn {
@@ -189,5 +201,5 @@ button:hover {
 .character-box p {
     margin: 0 0 5px;
     font-size: 0.9em;
-    line-height: 1.2em;
+    line-height: 1.
 }

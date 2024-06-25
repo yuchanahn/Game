@@ -47,55 +47,28 @@ const mapTxt2ImgOptions = (options) => {
 };
 
 const url = 'http://127.0.0.1:7860/sdapi/v1/txt2img';
-const data = {
-    prompt: 'best quality, ultra high res, (photorealistic:1.4), (detailed beautiful girl:1.4), (medium breasts:0.8), Detailed facial details, beautiful detailed eyes, teenage, slender, smile, (makeup:0.4), red lips, (full body, sitting, castle, on couch), <lora:cuteGirlMix4_v10:0.7>, <lora:breastinclassBetter:0.3>,(Night:1.2), highly detailed clothes, (ulzzang-6500-v1.1:0.3), Style-Japan',
-};
 
-function fetchImage() {
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(mapTxt2ImgOptions(data)),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Success:', data);
-
-            const base64ImageDataUrl = `data:image/png;base64,${data.images[0]}`;
-            const html = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Base64 Image</title>
-            </head>
-            <body>
-                <h1>Base64 Image Example</h1>
-                <img src="${base64ImageDataUrl}" alt="Base64 Image">
-            </body>
-            </html>
-        `;
-            fs.writeFile('example.html', html, 'utf8', (err) => {
-                if (err) {
-                    console.error('Error writing file:', err);
-                    return;
-                }
-
-                console.log('File has been updated.');
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
+async function fetchImage(prompt) {
+    try {
+        console.log(`Fetching image... prompt : ${prompt}`);
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(mapTxt2ImgOptions({ prompt: prompt })), // using prompt directly, assuming no mapTxt2ImgOptions function
         });
-
+        if (!res.ok) {
+            // 요청이 성공하지 않은 경우 에러를 발생시킵니다.
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        let json = await res.json();
+        return json.images[0];
+    } catch (error) {
+        // 에러가 발생하면 콘솔에 에러 메시지를 출력하고 null을 반환합니다.
+        console.error('Error fetching image:', error);
+        return null;
+    }
 }
 
 const ws = new WebSocket('ws://35.216.97.222:8080');
@@ -106,12 +79,19 @@ ws.on('open', function open() {
     ws.send(json);
 });
 
-ws.on('message', function incoming(message) {
-    console.log('Received from server: %s', message);
+ws.on('message', async function incoming(message) {
+    try {
+        const json = JSON.parse(message);
+        if (json.prompt == null) {
+            return;
+        }
+        const image = await fetchImage(json.prompt);
+        ws.send(JSON.stringify({ id: json.id, image: `data:image/png;base64,${image}`}));
+    } catch (e) {
+        return;
+    }
 });
 
 ws.on('close', function close() {
     console.log('Disconnected from server');
 });
-
-//fetchImage();
