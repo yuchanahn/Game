@@ -163,8 +163,6 @@ app.post('/game_start', async (req, res) => {
     const rawJson = character.replace(/>>/g, '').trim();
     console.log('character: ', rawJson);
 
-    
-
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
@@ -217,10 +215,7 @@ app.post('/generate', async (req, res) => {
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
         const rawJson = character.replace(/>>/g, '').trim();
-        console.log('ai gen : ', char_prompt);
-
-        
-
+        console.log('ai gen : ', char_prompt + rawJson);
         const characterJSON = JSON.parse(`{ ${rawJson} }`);
 
         // 배열의 각 요소에 대해 profileImage 필드 추가
