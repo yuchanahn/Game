@@ -187,7 +187,8 @@ app.post('/generate', async (req, res) => {
 
         if (count > 20) {
             //Error: 이야기가 끝났습니다.
-            return res.status(400).json({ error: 'Story has ended' });
+            res.send({ story: "이야기 끝.", character: "", image: "", count: count});
+            return;
         }
 
         const story_end = count === 20;
