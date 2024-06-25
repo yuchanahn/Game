@@ -136,7 +136,7 @@ app.post('/game_start', async (req, res) => {
             이미지 생성 프롬프트는 Stable Diffusion을 사용합니다. 따라서 프롬프트를 
             Luxury product style (best quality, high quality, sharp focus:1.4), european beautiful woman, slim, large breasts, front view, look at the viewer, empty street, best quality, realistic ,masterpiece, <lora:sh1rtng:0.6> blue  shirt, black skirt, from side . Elegant, sophisticated, high-end, luxurious, professional, highly detailed
             이런식으로 작성해야합니다.
-            
+
             예시:
                 소설 내용...
                 <<
@@ -226,8 +226,6 @@ app.post('/generate', async (req, res) => {
             draw.send(JSON.stringify({ id: id, prompt: image_prompt }));
 
             image = await promise;
-
-            console.log('Image fetched successfully, image' + image);
         }
         res.send({ story: aiResponseHTML, character: characterJSON, image: image, count: count });
     } catch (error) {
