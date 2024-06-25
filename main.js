@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // 세부사항 표시 (기본적으로 숨김)
             const details = document.createElement('div');
             details.classList.add('character-details', 'hidden');
-            details.textContent = `이름: ${character.이름}, Age: ${character.나이}`;
+            details.textContent = `이름: ${character.이름}, 나이: ${character.나이}, 성별 : ${character.성별}, 성격: ${character.성격}, 외모: ${character.외모}`;
             characterBox.appendChild(details);
             characterList.appendChild(characterBox);
         });
