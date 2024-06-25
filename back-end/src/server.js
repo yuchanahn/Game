@@ -243,7 +243,7 @@ app.post('/generate', async (req, res) => {
 
             const { id, promise } = addTaskToQueue(image_prompt);
             
-            draw.send(JSON.stringify({ id: id, prompt: image_prompt }));
+            draw.send(JSON.stringify({ id: id, prompt: image_prompt, type: '0' }));
 
             image = await promise;
         }

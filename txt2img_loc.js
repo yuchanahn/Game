@@ -94,10 +94,10 @@ ws.on('message', async function incoming(message) {
         
         let image;
 
-        if (json.type !== null){
-            image = await fetchImage(json.prompt);
+        if (json.type === '1'){
+            image = await fetchImage(json.prompt, true);
         } else {
-            image = await fetchImage(json.prompt);
+            image = await fetchImage(json.prompt, false);
         }
         
         ws.send(JSON.stringify({ id: json.id, image: `data:image/png;base64,${image}`}));

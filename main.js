@@ -71,17 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
             details.classList.add('character-details', 'hidden');
             details.textContent = `이름: ${character.이름}, Age: ${character.나이}`;
             characterBox.appendChild(details);
-        
-            // 마우스 호버 시 세부사항 표시
-            characterBox.addEventListener('mouseover', () => {
-                details.classList.remove('hidden');
-            });
-        
-            // 마우스가 벗어날 때 세부사항 숨김
-            characterBox.addEventListener('mouseout', () => {
-                details.classList.add('hidden');
-            });
-        
             characterList.appendChild(characterBox);
         });
     }
