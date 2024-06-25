@@ -238,7 +238,7 @@ app.post('/generate', async (req, res) => {
         userSessions.set(userId, { session: session, count: count + 1, characterImages: character_images });
 
         let image = null;
-        if (image_prompt != null && count % 5 == 0) {
+        if (image_prompt != null && count % 2 == 0) {
             //image = await gen_image(image_prompt + ', hd, 2d, anime');
 
             const { id, promise } = addTaskToQueue(image_prompt);
