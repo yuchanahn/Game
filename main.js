@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (image != null) {
                 const imageBox = document.createElement('div');
                 imageBox.classList.add('image-box');
-                imageBox.innerHTML = `<img src="${image}" alt="AI Image">`; // AI 이미지 표시
+                imageBox.innerHTML = `<img src="${image}" alt="Base64">`; // AI 이미지 표시
                 dialogue.appendChild(imageBox);
             }
 

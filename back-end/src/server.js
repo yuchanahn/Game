@@ -28,6 +28,38 @@ function markdownToHTML(markdownText) {
 }
 
 const wss = new WebSocketServer({ port: 8080 });
+let image_queue = new Map();
+
+function addTaskToQueue(image_prompt) {
+    const id = randomUUID();
+    let resolve;
+    const promise = new Promise((res) => resolve = res);
+    
+    const task = {
+        id,
+        prompt: image_prompt,
+        promise,
+        resolve
+    };
+
+    image_queue.set(id, task);
+    console.log(`Task added: ${id}`);
+    return { id, promise };
+}
+
+function completeTask(id, result) {
+    if (image_queue.has(id)) {
+        const task = image_queue.get(id);
+        task.resolve(result);  // Promise를 해결하여 대기 중인 `await`가 해제됨
+        image_queue.delete(id);
+        console.log(`Task completed and removed from queue: ${id}`);
+    } else {
+        console.log(`Task not found: ${id}`);
+    }
+}
+
+
+
 var draw;
 
 // 연결이 수립되었을 때 실행되는 이벤트 핸들러
@@ -38,9 +70,7 @@ wss.on('connection', (ws) => {
     ws.on('message', (message) => {
         let json = JSON.parse(message);
         console.log(`서버에서 수신한 메시지: ${json}`);
-        
-        // 클라이언트에게 메시지를 전송
-        ws.send('서버에서 보낸 메시지: ' + message);
+        completeTask(json.id, json.image);
     });
 
     // 연결이 종료되었을 때 실행되는 이벤트 핸들러
@@ -127,7 +157,10 @@ app.post('/game_start', async (req, res) => {
         `,
     });
     const session = await model.startChat();
-    userSessions.set(userId, session);
+    userSessions.set(userId, { 
+        count: 0,
+        session: session 
+    } );
 
     const result = await session.sendMessage("내용 시작");
     const response = await result.response;
@@ -152,10 +185,13 @@ app.post('/generate', async (req, res) => {
 
     try {
         let session;
+        let count;
 
         // 해당 userId에 대한 세션이 있는지 확인
         if (userSessions.has(userId)) {
-            session = userSessions.get(userId);
+            session = userSessions.get(userId).session;
+            count = userSessions.get(userId).count;
+            userSessions.set(userId, { session: session, count: count + 1 });
         } else {
             //Error: 세션 정보가 없습니다.
             return res.status(400).json({ error: 'Session not found' });
@@ -178,8 +214,14 @@ app.post('/generate', async (req, res) => {
         console.log('ai gen : ', char_prompt);
         const characterJSON = JSON.parse(rawJson);
         let image = null;
-        if (image_prompt != null) {
-            //image = await gen_image(image_prompt + ', hentai, hd, 2d, anime');
+        if (image_prompt != null && count % 5 == 0) {
+            //image = await gen_image(image_prompt + ', hd, 2d, anime');
+
+            const { id, promise } = addTaskToQueue(image_prompt);
+
+            draw.send({ id: id, prompt: image_prompt });
+
+            image = await promise;
         }
         res.send({ story: aiResponseHTML, character: characterJSON, image: image });
     } catch (error) {
