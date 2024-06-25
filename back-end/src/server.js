@@ -132,8 +132,11 @@ app.post('/game_start', async (req, res) => {
             프로필은 인격체만 작성합니다. 사물은 제외합니다. (예: 무기, 마을이름, 지역이름, 책, 등 제외!)
 
             장면이 이미지 생성이 적합한 경우 이미지를 생성하기 위한 프롬프트를 작성합니다.
-
             캐릭터 프로필 작성 후 %%를 작성한 뒤 이미지 생성을 위한 프롬프트를 작성합니다.
+            이미지 생성 프롬프트는 Stable Diffusion을 사용합니다. 따라서 프롬프트를 
+            Luxury product style (best quality, high quality, sharp focus:1.4), european beautiful woman, slim, large breasts, front view, look at the viewer, empty street, best quality, realistic ,masterpiece, <lora:sh1rtng:0.6> blue  shirt, black skirt, from side . Elegant, sophisticated, high-end, luxurious, professional, highly detailed
+            이런식으로 작성해야합니다.
+            
             예시:
                 소설 내용...
                 <<
