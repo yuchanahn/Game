@@ -8,6 +8,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { randomUUID } from 'crypto';
 
 import Replicate from 'replicate';
+import WebSocket from 'ws';
+
 const replicate = new Replicate(
     {
         auth: "r8_B3atCuxvhKSbk1uQYqlpXIN2hbKkhiW1eZHFg",
@@ -187,7 +189,6 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
