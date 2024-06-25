@@ -180,13 +180,13 @@ button:hover {
     position: relative;
 }
 
-.character-box:hover .details {
-    display: block;
+.character-box:hover .character-details {
+    display: block; /* 또는 visibility: visible; 또는 opacity: 1; */
 }
 
 /* 세부사항 표시 스타일 */
 .character-details {
-    display: none;
+    display: none; /* 또는 visibility: hidden; 또는 opacity: 0; */
     position: absolute;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
