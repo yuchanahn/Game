@@ -163,6 +163,8 @@ app.post('/game_start', async (req, res) => {
     const rawJson = character.replace(/>>/g, '').trim();
     console.log('character: ', rawJson);
 
+    
+
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
@@ -217,6 +219,12 @@ app.post('/generate', async (req, res) => {
         const rawJson = character.replace(/>>/g, '').trim();
         console.log('ai gen : ', char_prompt);
         const characterJSON = JSON.parse(rawJson);
+
+        // 배열의 각 요소에 대해 profileImage 필드 추가
+        characterJSON.forEach(character => {
+            character.profileImage = "https://image.cdn2.seaart.ai/static/39f404ce3d18a39fdde8d8ab3fd5b011/1713202886987/1a8fd0a86c3d0125121be4c97f99c175_high.webp"; // 예: 'http://example.com/image.png'
+        });
+        
         let image = null;
         if (image_prompt != null && count % 5 == 0) {
             //image = await gen_image(image_prompt + ', hd, 2d, anime');

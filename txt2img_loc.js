@@ -56,7 +56,11 @@ async function fetchImage(prompt) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(mapTxt2ImgOptions({ prompt: prompt })), // using prompt directly, assuming no mapTxt2ImgOptions function
+            body: JSON.stringify(mapTxt2ImgOptions({ 
+                prompt: prompt,
+                negativePrompt: 'worst quality, low quality,  bad anatomy, bad hands, bad body, missing fingers, extra digit, fewer digits',
+                steps: 30,
+            })), // using prompt directly, assuming no mapTxt2ImgOptions function
         });
         if (!res.ok) {
             // 요청이 성공하지 않은 경우 에러를 발생시킵니다.

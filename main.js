@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dialogue = document.getElementById('dialogue');
     const characterList = document.getElementById('character-list'); // 캐릭터 리스트 요소
     const loadingSpinner = document.getElementById('loading-spinner-container'); // 로딩 스피너 추가
+    const countBox = document.getElementById('count-box');
 
     var user_id = "";
 
@@ -59,22 +60,34 @@ document.addEventListener('DOMContentLoaded', function () {
         characters.forEach(character => {
             const characterBox = document.createElement('div');
             characterBox.classList.add('character-box');
-            characterBox.innerHTML = `
-                <h3>${character.이름}</h3>
-                <p>나이: ${character.나이}</p>
-                <p>성별: ${character.성별}</p>
-                <p>성격: ${character.성격}</p>
-                <p>외모: ${character.외모}</p>
-            `;
+        
+            // 프로필 이미지 표시
+            const profileImage = document.createElement('img');
+            profileImage.src = character.profileImage;
+            characterBox.appendChild(profileImage);
+        
+            // 세부사항 표시 (기본적으로 숨김)
+            const details = document.createElement('div');
+            details.classList.add('character-details', 'hidden');
+            details.textContent = `이름: ${character.이름}, Age: ${character.나이}`;
+            characterBox.appendChild(details);
+        
+            // 마우스 호버 시 세부사항 표시
+            characterBox.addEventListener('mouseover', () => {
+                details.classList.remove('hidden');
+            });
+        
+            // 마우스가 벗어날 때 세부사항 숨김
+            characterBox.addEventListener('mouseout', () => {
+                details.classList.add('hidden');
+            });
+        
             characterList.appendChild(characterBox);
         });
     }
 
     function showCount(count) {
-        const countBox = document.createElement('div');
-        countBox.classList.add('count-box');
-        countBox.innerHTML = `진행도: ${count}/20`;
-        dialogue.appendChild(countBox);
+        countBox.innerHTML = `진행도: ${count} / 20`;
     }
 
     async function getAIResponse(prompt) {

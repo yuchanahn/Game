@@ -203,3 +203,11 @@ button:hover {
     font-size: 0.9em;
     line-height: 1.
 }
+
+.character-details.hidden {
+    display: none;
+}
+
+.character-box:hover .character-details {
+    display: block;
+}
