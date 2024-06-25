@@ -48,7 +48,7 @@ const mapTxt2ImgOptions = (options) => {
 
 const url = 'http://127.0.0.1:7860/sdapi/v1/txt2img';
 
-async function fetchImage(prompt) {
+async function fetchImage(prompt, is_character) {
     try {
         console.log(`Fetching image... prompt : ${prompt}`);
         const res = await fetch(url, {
@@ -57,9 +57,11 @@ async function fetchImage(prompt) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(mapTxt2ImgOptions({ 
-                prompt: prompt,
+                prompt: is_character ? prompt : prompt + 'only face, portrait, headshot, head shot, head only, face only',
                 negativePrompt: 'worst quality, low quality,  bad anatomy, bad hands, bad body, missing fingers, extra digit, fewer digits',
                 steps: 30,
+                width: is_character ? 100 : 512,
+                height: is_character ? 100 : 512,
             })), // using prompt directly, assuming no mapTxt2ImgOptions function
         });
         if (!res.ok) {
@@ -89,7 +91,15 @@ ws.on('message', async function incoming(message) {
         if (json.prompt == null) {
             return;
         }
-        const image = await fetchImage(json.prompt);
+        
+        let image;
+
+        if (json.type !== null){
+            image = await fetchImage(json.prompt);
+        } else {
+            image = await fetchImage(json.prompt);
+        }
+        
         ws.send(JSON.stringify({ id: json.id, image: `data:image/png;base64,${image}`}));
     } catch (e) {
         return;

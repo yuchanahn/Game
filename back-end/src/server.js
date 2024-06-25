@@ -147,7 +147,8 @@ app.post('/game_start', async (req, res) => {
     const session = await model.startChat();
     userSessions.set(userId, { 
         count: 0,
-        session: session 
+        session: session,
+        characterImages: new Map(),
     } );
 
     const result = await session.sendMessage("내용 시작");
@@ -174,11 +175,13 @@ app.post('/generate', async (req, res) => {
     try {
         let session;
         let count;
+        let character_images;
 
         // 해당 userId에 대한 세션이 있는지 확인
         if (userSessions.has(userId)) {
             session = userSessions.get(userId).session;
             count = userSessions.get(userId).count;
+            character_images = userSessions.get(userId).characterImages;
             userSessions.set(userId, { session: session, count: count + 1 });
         } else {
             //Error: 세션 정보가 없습니다.
@@ -215,17 +218,31 @@ app.post('/generate', async (req, res) => {
         console.log(`ai gen : #\n${char_prompt}#\n${rawJson}`);
         const characterJSON = JSON.parse(rawJson);
 
-        // 배열의 각 요소에 대해 profileImage 필드 추가
-        characterJSON.forEach(character => {
-            character.profileImage = "https://image.cdn2.seaart.ai/static/39f404ce3d18a39fdde8d8ab3fd5b011/1713202886987/1a8fd0a86c3d0125121be4c97f99c175_high.webp"; // 예: 'http://example.com/image.png'
-        });
+        // 배열의 각 요소에 대해 비동기 작업을 수행하고 모두 완료될 때까지 기다림
+        await Promise.all(characterJSON.map(async character => {
+            if (!character_images.has(character.이름)) {
+                const model1 = genAI.getGenerativeModel({
+                    model: "gemini-1.5-flash"});
+                let ss = model1.startChat();
+                const result1 = await ss.sendMessage(`${character.외모}인 stable diffsion이미지 생성용 프롬프트 생성해줘. 다른 말은 하지말고 프롬프트만 대답해.` );
+                const response1 = await result1.response;
+                const text1 = await response1.text();
+                const { id, promise } = addTaskToQueue(text1);
+                draw.send(JSON.stringify({ id: id, prompt: text1, type: '1' }));
+                let new_image = await promise;
+                character_images.set(character.이름, new_image);
+            }
+            character.profileImage = character_images.get(character.이름);
+        }));
         
+        userSessions.set(userId, { session: session, count: count + 1, characterImages: character_images });
+
         let image = null;
         if (image_prompt != null && count % 5 == 0) {
             //image = await gen_image(image_prompt + ', hd, 2d, anime');
 
             const { id, promise } = addTaskToQueue(image_prompt);
-
+            
             draw.send(JSON.stringify({ id: id, prompt: image_prompt }));
 
             image = await promise;
