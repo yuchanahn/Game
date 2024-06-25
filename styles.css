@@ -173,42 +173,43 @@ button:hover {
     width: 100%;
 }
 
+/* 캐릭터 박스 스타일 */
 .character-box {
-    width: 100px;
-    height: 100px;
-    overflow: hidden;
+    width: 70px;
+    height: 70px;
     position: relative;
-    border: 1px solid #ccc;
-    margin: 10px;
+    display: inline-block;
+    cursor: pointer; /* 호버 효과를 위해 커서를 포인터로 변경 */
 }
 
 .character-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-
-.character-box:hover .character-details {
-    display: block; /* 또는 visibility: visible; 또는 opacity: 1; */
+    width: 100%; /* 이미지를 박스 크기에 맞게 조정 */
+    height: auto; /* 이미지의 비율 유지 */
 }
 
 /* 세부사항 표시 스타일 */
-.character-details {
-    display: none;
-    position: absolute;
-    top: -10px;
-    left: 110%;  /* 캐릭터 박스의 오른쪽에 표시되도록 */
-    background-color: rgba(0, 0, 0, 0.8);
+.character-box .character-details {
+    visibility: hidden; /* 초기에는 숨김 */
+    width: 120px;
+    background-color: black;
     color: white;
-    width: 200px;
-    padding: 10px;
-    box-sizing: border-box;
-    z-index: 10;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: -125%; /* 툴팁이 아래로 나타나도록 설정 */
+    left: 50%;
+    margin-left: -60px; /* 툴팁 가로 중앙 정렬 */
+    opacity: 0; /* 애니메이션 효과 준비를 위해 투명도 0으로 설정 */
+    transition: opacity 0.3s; /* 툴팁이 나타나는 애니메이션 설정 */
 }
 
+/* 호버 시 세부사항 표시 */
+.character-box:hover .character-details {
+    visibility: visible;
+    opacity: 1;
+}
 
 /* 채팅창 스타일 */
 .chat-box {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tooltip Example</title>
+<style>
+    /* 툴팁 컨테이너의 스타일 */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer; /* 호버 효과를 위해 커서를 포인터로 변경 */
+    }
+    
+    /* 툴팁 내용의 스타일 */
+    .tooltip .tooltiptext {
+        visibility: hidden; /* 초기에는 숨김 */
+        width: 120px;
+        background-color: black;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* 툴팁이 아래로 나타나도록 설정 */
+        left: 50%;
+        margin-left: -60px; /* 툴팁 가로 중앙 정렬 */
+        opacity: 0; /* 애니메이션 효과 준비를 위해 투명도 0으로 설정 */
+        transition: opacity 0.3s; /* 툴팁이 나타나는 애니메이션 설정 */
+    }
+    
+    /* 툴팁 표시 상태 */
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+
+<h2>Tooltip Example</h2>
+
+<!-- 툴팁을 가진 요소 -->
+<div class="tooltip"><img src="data:image/png;base64,i">
+    <!-- 툴팁 내용 -->
+    <span class="tooltiptext">이것이 툴팁입니다.</span>
+</div>
+
+</body>
+</html>
