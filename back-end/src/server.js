@@ -8,7 +8,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { randomUUID } from 'crypto';
 
 import Replicate from 'replicate';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from "ws";
 
 const replicate = new Replicate(
     {
@@ -190,18 +190,22 @@ app.listen(PORT, () => {
 });
 
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocketServer({ port: 8080 });
 
-wss.on('connection', function connection(ws) {
-  console.log('Client connected');
-
-  ws.on('message', function incoming(message) {
-    console.log('Received: %s', message);
-    // 클라이언트에게 메시지 전송 예시
-    ws.send('Server received: ' + message);
-  });
-
-  ws.on('close', function close() {
-    console.log('Client disconnected');
-  });
+// 연결이 수립되었을 때 실행되는 이벤트 핸들러
+wss.on('connection', (ws) => {
+    console.log('클라이언트가 연결되었습니다.');
+  
+    // 클라이언트로부터 메시지를 수신했을 때 실행되는 이벤트 핸들러
+    ws.on('message', (message) => {
+      console.log(`서버에서 수신한 메시지: ${message}`);
+  
+      // 클라이언트에게 메시지를 전송
+      ws.send('서버에서 보낸 메시지: ' + message);
+    });
+  
+    // 연결이 종료되었을 때 실행되는 이벤트 핸들러
+    ws.on('close', () => {
+      console.log('클라이언트가 연결을 종료했습니다.');
+    });
 });

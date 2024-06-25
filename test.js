@@ -48,7 +48,7 @@ const mapTxt2ImgOptions = (options) => {
 
 const url = 'http://127.0.0.1:7860/sdapi/v1/txt2img';
 const data = {
-    prompt: 'A beautiful elven woman standing in an enchanted forest, with long flowing silver hair, glowing blue eyes, and delicate features. She is wearing a flowing emerald green dress adorned with intricate golden embroidery. The forest is filled with mystical lights and ancient trees with twisted roots and branches. The scene is illuminated by soft, ethereal light filtering through the canopy. Her expression is serene and wise, reflecting centuries of wisdom. Detailed, fantasy, high-resolution, cinematic lighting.',
+    prompt: 'best quality, ultra high res, (photorealistic:1.4), (detailed beautiful girl:1.4), (medium breasts:0.8), Detailed facial details, beautiful detailed eyes, teenage, slender, smile, (makeup:0.4), red lips, (full body, sitting, castle, on couch), <lora:cuteGirlMix4_v10:0.7>, <lora:breastinclassBetter:0.3>,(Night:1.2), highly detailed clothes, (ulzzang-6500-v1.1:0.3), Style-Japan',
 };
 
 fetch(url, {
