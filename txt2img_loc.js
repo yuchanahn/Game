@@ -52,25 +52,24 @@ const data = {
 };
 
 function fetchImage() {
-
-fetch(url, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(mapTxt2ImgOptions(data)),
-})
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mapTxt2ImgOptions(data)),
     })
-    .then(data => {
-        console.log('Success:', data);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
 
-        const base64ImageDataUrl = `data:image/png;base64,${data.images[0]}`;
-        const html = `
+            const base64ImageDataUrl = `data:image/png;base64,${data.images[0]}`;
+            const html = `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -84,32 +83,38 @@ fetch(url, {
             </body>
             </html>
         `;
-        fs.writeFile('example.html', html, 'utf8', (err) => {
-            if (err) {
-                console.error('Error writing file:', err);
-                return;
-            }
+            fs.writeFile('example.html', html, 'utf8', (err) => {
+                if (err) {
+                    console.error('Error writing file:', err);
+                    return;
+                }
 
-            console.log('File has been updated.');
+                console.log('File has been updated.');
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
 
 }
+
 
 const ws = new WebSocket('ws://35.216.97.222:8080');
 
 ws.on('open', function open() {
-  console.log('Connected to server');
-  ws.send('Hello server!');
+    console.log('Connected to server');
+    let json = JSON.stringify({ type: 'message', data: 'Hello server!' });
+    ws.send(json);
 });
 
 ws.on('message', function incoming(message) {
-  console.log('Received from server: %s', message);
+    console.log('Received from server: %s', message);
 });
 
 ws.on('close', function close() {
-  console.log('Disconnected from server');
+    console.log('Disconnected from server');
 });
+
+
+
+fetchImage();

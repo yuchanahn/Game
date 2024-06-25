@@ -17,7 +17,7 @@ const replicate = new Replicate(
 );
 
 async function gen_image(prompt) {
-    const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { 
+    const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", {
         input: {
             prompt: prompt,
             scheduler: "K_EULER"
@@ -52,8 +52,8 @@ app.post('/game_start', async (req, res) => {
     const userId = randomUUID();
     const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
-        systemInstruction: 
-        `
+        systemInstruction:
+            `
             당신은 소설 작가입니다.
             판타지, 로맨스 장르의 이야기를 써야합니다.
 
@@ -143,7 +143,7 @@ app.post('/game_start', async (req, res) => {
 // POST /generate 요청 처리
 app.post('/generate', async (req, res) => {
     const { userId, prompt } = req.body;  // 클라이언트에서 userId도 함께 전달받음
-    
+
     try {
         let session;
 
@@ -160,7 +160,7 @@ app.post('/generate', async (req, res) => {
         const text = await response.text();
 
         const aiResponseMarkdown = `${text}`;
-        
+
         // << 이후의 내용을 추출
         const story = aiResponseMarkdown.split('<<')[0].trim();
         const char_prompt = aiResponseMarkdown.split('<<')[1].trim();
@@ -168,7 +168,7 @@ app.post('/generate', async (req, res) => {
         const image_prompt = aiResponseMarkdown.split('%%')[1].trim();
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
-        const rawJson = character.replace(/>>/g, '').trim(); 
+        const rawJson = character.replace(/>>/g, '').trim();
         console.log('ai gen : ', char_prompt);
         const characterJSON = JSON.parse(rawJson);
         let image = null;
@@ -195,17 +195,19 @@ const wss = new WebSocketServer({ port: 8080 });
 // 연결이 수립되었을 때 실행되는 이벤트 핸들러
 wss.on('connection', (ws) => {
     console.log('클라이언트가 연결되었습니다.');
-  
+
     // 클라이언트로부터 메시지를 수신했을 때 실행되는 이벤트 핸들러
     ws.on('message', (message) => {
-      console.log(`서버에서 수신한 메시지: ${message}`);
-  
-      // 클라이언트에게 메시지를 전송
-      ws.send('서버에서 보낸 메시지: ' + message);
+        let json = JSON.parse(message); 
+        
+        console.log(`서버에서 수신한 메시지: ${json}`);
+
+        // 클라이언트에게 메시지를 전송
+        ws.send('서버에서 보낸 메시지: ' + message);
     });
-  
+
     // 연결이 종료되었을 때 실행되는 이벤트 핸들러
     ws.on('close', () => {
-      console.log('클라이언트가 연결을 종료했습니다.');
+        console.log('클라이언트가 연결을 종료했습니다.');
     });
 });
