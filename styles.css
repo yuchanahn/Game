@@ -172,42 +172,32 @@ button:hover {
     margin: 20px 0;
     width: 100%;
 }
-
+/* 캐릭터 박스 스타일 */
 .character-box {
-    background-color: #444;
-    padding: 10px;
-    border-radius: 5px;
-    color: #fff;
-    width: 150px;
-    height: 200px;
-    box-sizing: border-box;
-    text-align: center;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    position: relative;
 }
 
-.character-box:hover {
-    background-color: #555;
-    cursor: pointer;
-}
-
-.character-box h3 {
-    margin: 0 0 5px;
-    font-size: 1em;
-}
-
-.character-box p {
-    margin: 0 0 5px;
-    font-size: 0.9em;
-    line-height: 1.
-}
-
-.character-details.hidden {
-    display: none;
-}
-
-.character-box:hover .character-details {
+.character-box:hover .details {
     display: block;
+}
+
+/* 세부사항 표시 스타일 */
+.details {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+
+/* 채팅창 스타일 */
+.chat-box {
+    resize: vertical;
+    overflow: auto;
+    max-height: 500px; /* 최대 높이 설정 */
 }
