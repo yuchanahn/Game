@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/vertexai": "^1.2.0",
     "@google/generative-ai": "^0.12.0",
     "@zeldafan0225/ai_horde": "^5.1.0",
     "axios": "^1.7.2",

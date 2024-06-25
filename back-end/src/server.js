@@ -7,26 +7,9 @@ import { marked } from 'marked'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { randomUUID } from 'crypto';
 
-import Replicate from 'replicate';
 import WebSocket, { WebSocketServer } from "ws";
 
-const replicate = new Replicate(
-    {
-        auth: "r8_B3atCuxvhKSbk1uQYqlpXIN2hbKkhiW1eZHFg",
-    }
-);
-
-async function gen_image(prompt) {
-    const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", {
-        input: {
-            prompt: prompt,
-            scheduler: "K_EULER"
-        },
-    });
-    return output;
-}
-
-const genAI = new GoogleGenerativeAI('AIzaSyBCT3a4qCAOI5Cp_F3m_qsAdob7jNl11ok');
+const genAI = new GoogleGenerativeAI('AIzaSyD9-DKBNlC9VSB-0yg-OLemRvRuAfKZTyE');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -196,7 +179,7 @@ app.post('/generate', async (req, res) => {
         const characterJSON = JSON.parse(rawJson);
         let image = null;
         if (image_prompt != null) {
-            image = await gen_image(image_prompt + ', hentai, hd, 2d, anime');
+            //image = await gen_image(image_prompt + ', hentai, hd, 2d, anime');
         }
         res.send({ story: aiResponseHTML, character: characterJSON, image: image });
     } catch (error) {

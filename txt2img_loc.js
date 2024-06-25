@@ -114,4 +114,4 @@ ws.on('close', function close() {
     console.log('Disconnected from server');
 });
 
-fetchImage();
+//fetchImage();
