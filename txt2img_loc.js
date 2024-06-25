@@ -98,7 +98,6 @@ function fetchImage() {
 
 }
 
-
 const ws = new WebSocket('ws://35.216.97.222:8080');
 
 ws.on('open', function open() {
@@ -114,7 +113,5 @@ ws.on('message', function incoming(message) {
 ws.on('close', function close() {
     console.log('Disconnected from server');
 });
-
-
 
 fetchImage();

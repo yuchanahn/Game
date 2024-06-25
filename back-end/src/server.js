@@ -44,6 +44,29 @@ function markdownToHTML(markdownText) {
     return marked(markdownText);
 }
 
+const wss = new WebSocketServer({ port: 8080 });
+var draw;
+
+// 연결이 수립되었을 때 실행되는 이벤트 핸들러
+wss.on('connection', (ws) => {
+    console.log('클라이언트가 연결되었습니다.');
+    draw = ws;
+    // 클라이언트로부터 메시지를 수신했을 때 실행되는 이벤트 핸들러
+    ws.on('message', (message) => {
+        let json = JSON.parse(message);
+        console.log(`서버에서 수신한 메시지: ${json}`);
+        
+        // 클라이언트에게 메시지를 전송
+        ws.send('서버에서 보낸 메시지: ' + message);
+    });
+
+    // 연결이 종료되었을 때 실행되는 이벤트 핸들러
+    ws.on('close', () => {
+        console.log('클라이언트가 연결을 종료했습니다.');
+    });
+});
+
+
 // 매핑할 사용자 세션과 모델 정보를 담을 맵
 const userSessions = new Map();
 
@@ -136,7 +159,7 @@ app.post('/game_start', async (req, res) => {
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
-
+    ws.send('서버에서 보낸 메시지: ' + "test");
     res.send({ userId: userId, text: aiResponseHTML });
 });
 
@@ -190,24 +213,3 @@ app.listen(PORT, () => {
 });
 
 
-const wss = new WebSocketServer({ port: 8080 });
-
-// 연결이 수립되었을 때 실행되는 이벤트 핸들러
-wss.on('connection', (ws) => {
-    console.log('클라이언트가 연결되었습니다.');
-
-    // 클라이언트로부터 메시지를 수신했을 때 실행되는 이벤트 핸들러
-    ws.on('message', (message) => {
-        let json = JSON.parse(message); 
-        
-        console.log(`서버에서 수신한 메시지: ${json}`);
-
-        // 클라이언트에게 메시지를 전송
-        ws.send('서버에서 보낸 메시지: ' + message);
-    });
-
-    // 연결이 종료되었을 때 실행되는 이벤트 핸들러
-    ws.on('close', () => {
-        console.log('클라이언트가 연결을 종료했습니다.');
-    });
-});
