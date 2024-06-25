@@ -186,3 +186,21 @@ app.post('/generate', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', function connection(ws) {
+  console.log('Client connected');
+
+  ws.on('message', function incoming(message) {
+    console.log('Received: %s', message);
+    // 클라이언트에게 메시지 전송 예시
+    ws.send('Server received: ' + message);
+  });
+
+  ws.on('close', function close() {
+    console.log('Client disconnected');
+  });
+});
