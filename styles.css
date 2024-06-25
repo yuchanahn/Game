@@ -14,7 +14,7 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    height: 70vh;
+    height: 91vh;
 }
 
 h1 {
@@ -185,7 +185,7 @@ button:hover {
 }
 
 /* 세부사항 표시 스타일 */
-.details {
+.character-details {
     display: none;
     position: absolute;
     bottom: 0;
