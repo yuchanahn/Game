@@ -212,7 +212,7 @@ app.post('/generate', async (req, res) => {
 
         const aiResponseHTML = markdownToHTML(`# *** \n${story}\n`);
         const rawJson = character.replace(/>>/g, '').trim();
-        console.log('ai gen : ', char_prompt + rawJson);
+        console.log(`ai gen : #\n${char_prompt}#\n${rawJson}`);
         const characterJSON = JSON.parse(rawJson);
 
         // 배열의 각 요소에 대해 profileImage 필드 추가
