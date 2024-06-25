@@ -175,7 +175,7 @@ app.post('/game_start', async (req, res) => {
     const aiResponseHTML = markdownToHTML(`# *** \n${story}`);
 
     console.log('User ID:', userId);
-    ws.send('서버에서 보낸 메시지: ' + "test");
+    draw.send('서버에서 보낸 메시지: ' + "test");
     res.send({ userId: userId, text: aiResponseHTML });
 });
 
